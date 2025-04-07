@@ -1,7 +1,11 @@
+using SignalRChatTest.Hubs;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+// Add services to the SignalR.
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -21,5 +25,8 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+
+// 添加 ChatHub 路由
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
