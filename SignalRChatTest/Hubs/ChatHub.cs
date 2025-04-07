@@ -54,6 +54,7 @@ namespace SignalRChatTest.Hubs
             => await Clients.Group("SignalR Users").ReceiveMessage(user, message);
         
         // 添加密钥服务，其是指使用密钥注册和检索依赖项注入 (DI) 服务的机制
+        // 使用 [FromKeyedServices] 属性指定密钥来访问已注册的服务
         public void SmallCacheMethod([FromKeyedServices("small")] ICache cache)
         {
             Console.WriteLine(cache.Get("signalr"));

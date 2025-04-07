@@ -3,6 +3,7 @@ using SignalRChatTest.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // 添加密钥服务，其是指使用密钥注册和检索依赖项注入 (DI) 服务的机制
+// 调用 AddKeyedSingleton （或 AddKeyedScoped 或 AddKeyedTransient）来注册服务，与密钥相关联
 builder.Services.AddKeyedSingleton<ICache, BigCache>("big");
 builder.Services.AddKeyedSingleton<ICache, SmallCache>("small");
 
