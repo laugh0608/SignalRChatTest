@@ -27,6 +27,6 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 // 添加 ChatHub 路由
-app.MapHub<ChatHub>("/chatHub");
+app.MapHub<ChatHub>("/Chat");
 
 app.Run();
