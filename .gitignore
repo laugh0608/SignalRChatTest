@@ -1,0 +1,21 @@
+## 自定义
+/SignalRChatTest/bin/
+/SignalRChatTest/bin/*
+/SignalRChatTest/obj/
+/SignalRChatTest/obj/*
+/.idea/
+/.idea/*
+/.git/
+/.git/*
+/.vs/
+/.vs/*
+/.vscode/
+/.vscode/*
+SignalRChatTest.sln.DotSettings.user
+
+## 默认
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
