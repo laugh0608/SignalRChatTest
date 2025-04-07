@@ -2,6 +2,10 @@ using SignalRChatTest.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 添加密钥服务，其是指使用密钥注册和检索依赖项注入 (DI) 服务的机制
+builder.Services.AddKeyedSingleton<ICache, BigCache>("big");
+builder.Services.AddKeyedSingleton<ICache, SmallCache>("small");
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 // 注册 SignalR 中心所需的服务

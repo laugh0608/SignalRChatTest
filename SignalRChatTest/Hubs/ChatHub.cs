@@ -8,14 +8,10 @@ namespace SignalRChatTest.Hubs
     // {
     //     // SendMessage 使用 Clients.All 将消息发送到所有连接的客户端
     //     public async Task SendMessage(string user, string message)
-    //     {
-    //         await Clients.All.SendAsync("ReceiveMessage", user, message);
-    //     }
-    //     
+    //         => await Clients.All.SendAsync("ReceiveMessage", user, message);
     //     // SendMessageToCaller 使用 Clients.Caller 将消息发送回调用方
     //     public async Task SendMessageToCaller(string user, string message)
     //         => await Clients.Caller.SendAsync("ReceiveMessage", user, message);
-    //     
     //     // SendMessageToGroup 将消息发送给 SignalR Users 组中的所有客户端
     //     public async Task SendMessageToGroup(string user, string message)
     //         => await Clients.Group("SignalR Users").SendAsync("ReceiveMessage", user, message);
@@ -26,16 +22,45 @@ namespace SignalRChatTest.Hubs
     {
         Task ReceiveMessage(string user, string message);
     }
-    // 此接口可用于将上面的 ChatHub 示例重构为强类型：
+    
+    // 添加密钥服务，其是指使用密钥注册和检索依赖项注入 (DI) 服务的机制
+    public interface ICache
+    {
+        object Get(string key);
+    }
+    public class BigCache : ICache
+    {
+        public object Get(string key) => $"Resolving {key} from big cache.";
+    }
+    public class SmallCache : ICache
+    {
+        public object Get(string key) => $"Resolving {key} from small cache.";
+    }
+    
+    // 此接口可用于将上面的 ChatHub 示例使用泛型重构为强类型：
+    // 对客户端方法进行编译时检查，可防止由于使用字符串而导致的问题
     public class StronglyTypedChatHub : Hub<IChatClient>
     {
+        // 发送到所有连接的客户端
         public async Task SendMessage(string user, string message)
             => await Clients.All.ReceiveMessage(user, message);
 
+        // 发送回调用方
         public async Task SendMessageToCaller(string user, string message)
             => await Clients.Caller.ReceiveMessage(user, message);
 
+        // 发送给 SignalR Users 组中的所有客户端
         public async Task SendMessageToGroup(string user, string message)
             => await Clients.Group("SignalR Users").ReceiveMessage(user, message);
+        
+        // 添加密钥服务，其是指使用密钥注册和检索依赖项注入 (DI) 服务的机制
+        public void SmallCacheMethod([FromKeyedServices("small")] ICache cache)
+        {
+            Console.WriteLine(cache.Get("signalr"));
+        }
+        public void BigCacheMethod([FromKeyedServices("big")] ICache cache)
+        {
+            Console.WriteLine(cache.Get("signalr"));
+        }
     }
 }
