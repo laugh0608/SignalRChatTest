@@ -12,6 +12,7 @@
 /.vscode/
 /.vscode/*
 SignalRChatTest.sln.DotSettings.user
+/SignalRChatTest/SignalRChatTest.csproj.user
 
 ## 默认
 bin/
