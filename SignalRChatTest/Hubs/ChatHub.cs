@@ -37,6 +37,7 @@ namespace SignalRChatTest.Hubs
         public object Get(string key) => $"Resolving {key} from small cache.";
     }
     
+    // 通过声明从 Hub 继承的类来创建中心。 将 public 方法添加到类，使其可从客户端调用
     // 此接口可用于将上面的 ChatHub 示例使用泛型重构为强类型：
     // 对客户端方法进行编译时检查，可防止由于使用字符串而导致的问题
     public class StronglyTypedChatHub : Hub<IChatClient>
@@ -62,6 +63,21 @@ namespace SignalRChatTest.Hubs
         public void BigCacheMethod([FromKeyedServices("big")] ICache cache)
         {
             Console.WriteLine(cache.Get("signalr"));
+        }
+        
+        // SignalR 中心 API 提供 OnConnectedAsync 和 OnDisconnectedAsync 虚拟方法来管理和跟踪连接
+        // 替代 OnConnectedAsync 虚拟方法可在客户端连接到中心时执行操作
+        public override async Task OnConnectedAsync()
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, "SignalR Users");
+            await base.OnConnectedAsync();
+        }
+        // 替代 OnDisconnectedAsync 虚拟方法可在客户端断开连接时执行操作
+        // 如果客户端有意断开连接（例如通过调用 connection.stop()），则 exception 参数将设置为 null
+        // 但是，如果客户端由于错误（例如网络故障）而断开连接，则 exception 参数将包含描述故障的异常
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
