@@ -31,3 +31,14 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     });
     event.preventDefault();
 });
+
+// 在中心方法中引发的异常会发送到调用方法的客户端
+// invoke 方法会返回 JavaScript Promise
+// 客户端可以将 catch 处理程序附加到返回的承诺，或使用和 try/catch 和 async/await 来处理异常
+// 意外异常通常包含敏感信息，例如在数据库连接失败时触发的异常中会包含数据库服务器的名称
+// 作为安全措施，SignalR 在默认情况下不会公开这些详细错误消息
+try {
+    await connection.invoke("SendMessage", user, message);
+} catch (err) {
+    console.error(err);
+}

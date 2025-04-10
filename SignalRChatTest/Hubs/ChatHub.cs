@@ -79,5 +79,10 @@ namespace SignalRChatTest.Hubs
         {
             await base.OnDisconnectedAsync(exception);
         }
+        
+        // 如果在中心方法中引发 HubException，则 SignalR 会将整个消息发送到客户端
+        // 如果必须将异常情况传播到客户端，请使用 HubException 类
+        public Task ThrowException()
+            => throw new HubException("This error will be sent to the client!");
     }
 }
